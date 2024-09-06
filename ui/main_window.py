@@ -4,15 +4,20 @@ from PySide6.QtWidgets import (
     QVBoxLayout,
     QWidget,
     QDialog,
+    QWidgetAction
 )
 
-from word_diplay_window import WordDisplayWindow
-from word_request_dialog import WordRequestDialog
+from ui.word_diplay_window import WordDisplayWindow
+from ui.word_request_dialog import WordRequestDialog
+
+from src.vocab import Vocab
 
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("Word Manager")
+        self.vocab=self.load_vocab()
+
+        self.setWindowTitle("Vocab Assistant")
         
         self.layout = QVBoxLayout()
         
@@ -28,6 +33,11 @@ class MainWindow(QMainWindow):
         container.setLayout(self.layout)
         self.setCentralWidget(container)
 
+    def load_vocab(self):
+        vocab=Vocab()
+        vocab.load()
+        return vocab
+
     def show_new_words(self):
         self.show_word_request_dialog("New")
 
@@ -38,9 +48,19 @@ class MainWindow(QMainWindow):
         dialog = WordRequestDialog()
         if dialog.exec() == QDialog.Accepted:
             word_count, is_random = dialog.get_input()
-            words = [f"{word_type} Word {i+1}" for i in range(int(word_count))]
+            words=[]
+            if word_type=="New":
+                words = self.vocab.get_new_words(word_count, is_random)
+            else:
+                words = self.vocab.get_read_words(word_count, is_random)
             self.display_words(words)
 
     def display_words(self, words):
+        if len(words)<=0:
+            return
+
         self.word_display_window = WordDisplayWindow(words)
         self.word_display_window.show()
+
+    def closeEvent(self, _):
+        self.vocab.save()

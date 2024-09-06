@@ -26,4 +26,4 @@ class WordRequestDialog(QDialog):
         self.layout.addRow(self.button_box)
 
     def get_input(self):
-        return self.word_count_input.text(), self.random_checkbox.isChecked()
+        return int(self.word_count_input.text()), self.random_checkbox.isChecked()

@@ -5,8 +5,8 @@ class Word:
         self.meaning=""
         self.show_again=True
 
-    def set_show_again(self, show_again):
-        self.show_again=show_again
+    def do_not_show(self):
+        self.show_again=False
 
     def set_read(self, read):
         self.read=read

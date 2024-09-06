@@ -5,8 +5,8 @@ from src.word import Word
 
 class Vocab:
     def __init__(self, address="../vocab.txt"):
+        self.address=address
         self.words=self.read_file(address)
-        self.offset=0
 
     def get_new_words(self, num=10, random_order=False):
         new_words=[]
@@ -66,5 +66,6 @@ class Vocab:
         except:
             print("No file to load!")
 
-# voc = Vocab()
-# print(voc.get_read_words())
+    def reset(self):
+        self.words.clear()
+        self.words=self.read_file(self.address)
